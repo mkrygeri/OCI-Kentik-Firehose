@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# terraform.tfvars.example
+#
+# Copy this file to terraform.tfvars and fill in your values.
+# Never commit terraform.tfvars to source control — it contains secrets.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── OCI Provider ──────────────────────────────────────────────────────────────
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaa<YOUR_TENANCY>"
+user_ocid        = "ocid1.user.oc1..aaaaaaaa<YOUR_USER>"
+fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+region           = "us-ashburn-1"
+
+# ── Compartment ───────────────────────────────────────────────────────────────
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaa<YOUR_COMPARTMENT>"
+
+# ── Networking ────────────────────────────────────────────────────────────────
+vcn_cidr            = "10.0.0.0/16"
+public_subnet_cidr  = "10.0.1.0/24"
+private_subnet_cidr = "10.0.2.0/24"
+
+# ── Compute ───────────────────────────────────────────────────────────────────
+ssh_public_key = "ssh-rsa AAAAB3Nza... your-public-key"
+
+# Oracle Linux 8 image OCID — update for your region.
+# Find current images at: https://docs.oracle.com/en-us/iaas/images/
+instance_image_ocid = "ocid1.image.oc1.iad.aaaaaaaa<ORACLE_LINUX_8_IMAGE>"
+
+instance_count     = 3
+instance_ocpus     = 2
+instance_memory_gb = 16
+
+# ── Load Balancer ─────────────────────────────────────────────────────────────
+lb_min_bandwidth_mbps = 10
+lb_max_bandwidth_mbps = 100
+
+# For production: provide the OCID of a certificate in OCI Certificates Service.
+# Leave empty to use a self-signed certificate (dev/test only).
+lb_certificate_ocid = ""
+# lb_certificate_ocid = "ocid1.certificate.oc1.iad.aaaaaaaa<YOUR_CERT>"
+
+lb_https_port        = 443
+ktranslate_http_port = 8081
+
+# ── OCI Streaming ─────────────────────────────────────────────────────────────
+stream_name            = "ktranslate-firehose"
+stream_partition_count = 3  # reduce if you hit tenancy partition limits (default limit is 5)
+stream_retention_hours = 24
+
+# Email for the ktranslate IAM service account (required by IDCS-enabled tenancies)
+iam_user_email = "your-admin-email@example.com"
+
+# ── ktranslate ────────────────────────────────────────────────────────────────
+ktranslate_image                = "kentik/ktranslate:v2"
+ktranslate_format               = "flat_json"
+ktranslate_compression          = "gzip"
+ktranslate_log_level            = "info"
+ktranslate_max_flows_per_message = 10000
+
+# ── Tags ─────────────────────────────────────────────────────────────────────
+freeform_tags = {
+  project    = "kentik-firehose"
+  managed_by = "terraform"
+  env        = "production"
+}

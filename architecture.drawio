@@ -1,0 +1,183 @@
+<mxfile host="65bd71144e">
+    <diagram id="kentik-oci-firehose" name="Kentik Firehose → OCI ktranslate → Streaming">
+        <mxGraphModel dx="4606" dy="1036" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1300" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="kentik" value="&lt;b style=&#39;font-size:12px&#39;&gt;Kentik Firehose&lt;/b&gt;&lt;br/&gt;&lt;font color=&#39;#555555&#39;&gt;SaaS / Kentik Cloud&lt;/font&gt;&lt;br/&gt;&lt;font color=&#39;#555555&#39; style=&#39;font-size:9px&#39;&gt;POST /ktranslate/jchf&lt;/font&gt;" style="shape=mxgraph.network.cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;pointerEvents=1;" parent="1" vertex="1">
+                    <mxGeometry x="-450" y="280" width="230" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="internet" value="&lt;b&gt;Internet&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-90" y="320" width="130" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="oci-region" value="&lt;b style=&#39;font-size:14px;color:#CC0000&#39;&gt;OCI Region&lt;/b&gt;" style="swimlane;startSize=30;whiteSpace=wrap;html=1;fillColor=#FFF9F0;strokeColor=#CC0000;strokeWidth=2.5;fontSize=13;fontStyle=1;fontColor=#CC0000;rounded=1;arcSize=2;verticalAlign=top;align=left;spacingLeft=12;opacity=40;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="200" width="1450" height="1000" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F9F9F9;strokeColor=#CCCCCC;fontSize=10;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1150" y="775" width="240" height="185" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-title" value="&lt;b&gt;Legend&lt;/b&gt;" style="text;html=1;align=center;fontStyle=1;fontSize=11;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1220" y="783" width="100" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-l1" value="HTTPS (TLS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6C8EBF;fontColor=#6C8EBF;fontSize=9;fontStyle=1;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1165" y="810" width="100" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-l2" value="HTTP (backend)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82B366;fontColor=#82B366;fontSize=9;fontStyle=1;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1165" y="840" width="100" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-l3" value="Kafka SASL_SSL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;fontColor=#9673A6;fontSize=9;fontStyle=1;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1165" y="870" width="100" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-l4" value="Secrets / IAM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#D79B00;fontColor=#D79B00;fontSize=9;fontStyle=1;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1165" y="900" width="100" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-l5" value="Outbound egress" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#888888;fontColor=#888888;fontSize=9;fontStyle=2;" parent="oci-region" vertex="1">
+                    <mxGeometry x="1165" y="930" width="100" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="vcn" value="&lt;b style=&#39;color:#F57F17&#39;&gt;VCN — 10.0.0.0/16&lt;/b&gt;" style="swimlane;startSize=26;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F57F17;strokeWidth=1.5;fontSize=11;fontStyle=1;fontColor=#F57F17;rounded=1;arcSize=2;verticalAlign=top;align=left;spacingLeft=10;opacity=50;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="240" width="1050" height="910" as="geometry"/>
+                </mxCell>
+                <mxCell id="igw" value="&lt;b&gt;Internet Gateway&lt;/b&gt;" style="shape=mxgraph.cisco.routers.router;html=1;pointerEvents=1;dashed=0;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1;align=center;outlineConnect=0;fontSize=9;" parent="vcn" vertex="1">
+                    <mxGeometry x="45" y="48" width="50" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="igw-label" value="Internet Gateway" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="320" width="110" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="pub-subnet" value="&lt;b&gt;Public Subnet — 10.0.1.0/24&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39; color=&#39;#6C8EBF&#39;&gt;NSG: lb-nsg | Ingress TCP :443 from 0.0.0.0/0 | Egress TCP :8081 to compute-nsg&lt;/font&gt;" style="swimlane;startSize=40;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=10;fontStyle=1;verticalAlign=top;align=left;spacingLeft=10;rounded=1;arcSize=3;opacity=60;" parent="1" vertex="1">
+                    <mxGeometry x="205" y="365" width="990" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="lb" value="&lt;b style=&#39;font-size:11px&#39;&gt;OCI Load Balancer&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Shape: Flexible (10–100 Mbps)&lt;br/&gt;Public IP (static)&lt;br/&gt;Listener: HTTPS :443 (TLS termination)&lt;br/&gt;Backend policy: ROUND_ROBIN&lt;br/&gt;Health check: HTTP GET / → 200&lt;/font&gt;" style="shape=mxgraph.cisco.servers.standard_server;html=1;pointerEvents=1;dashed=0;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=1.5;align=center;outlineConnect=0;fontSize=10;" parent="pub-subnet" vertex="1">
+                    <mxGeometry x="432.5" y="108" width="60" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cert-note" value="&lt;font style=&#39;font-size:9px&#39;&gt;TLS cert: OCI Certificates Service&lt;br/&gt;(var.lb_certificate_ocid)&lt;/font&gt;" style="callout;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;perimeter=mxPerimeter.RectanglePerimeter;size=12;direction=west;" parent="pub-subnet" vertex="1">
+                    <mxGeometry x="545" y="50" width="195" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="lb-label" value="&lt;b&gt;OCI Load Balancer&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Flexible | HTTPS :443&lt;br/&gt;→ HTTP :8081 backends&lt;br/&gt;ROUND_ROBIN | Health: GET /&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="478" width="180" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="priv-subnet" value="&lt;b&gt;Private Subnet — 10.0.2.0/24&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39; color=&#39;#82B366&#39;&gt;NSG: compute-nsg | Ingress TCP :8081 from lb-nsg | Egress TCP :9092 to OCI Svc Network | Egress TCP :443 to internet (NAT)&lt;/font&gt;" style="swimlane;startSize=42;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=1.5;fontSize=10;fontStyle=1;verticalAlign=top;align=left;spacingLeft=10;rounded=1;arcSize=3;opacity=60;" parent="1" vertex="1">
+                    <mxGeometry x="205" y="615" width="990" height="510" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-gw" value="&lt;b&gt;Service Gateway&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;All OCI Services Network&lt;br/&gt;Private path to OCI Streaming&lt;br/&gt;(no NAT / no internet hop)&lt;/font&gt;" style="shape=mxgraph.cisco.routers.router;html=1;fillColor=#f5f5f5;strokeColor=#9673A6;strokeWidth=1.5;align=center;outlineConnect=0;" parent="priv-subnet" vertex="1">
+                    <mxGeometry x="477" y="337" width="50" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-label" value="&lt;b&gt;Service Gateway&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;OCI Services Network&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="priv-subnet" vertex="1">
+                    <mxGeometry x="450" y="389" width="110" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vm2-vault" value="fetch secret at boot&lt;br/&gt;(instance principal)" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#D79B00;fontColor=#D79B00;dashed=1;fontSize=9;endArrow=open;endFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.008;entryY=0.579;entryDx=0;entryDy=0;entryPerimeter=0;" parent="priv-subnet" target="vault-label" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1038" y="261"/>
+                            <mxPoint x="1038" y="-25"/>
+                            <mxPoint x="1083" y="-25"/>
+                        </Array>
+                        <mxPoint x="535" y="260.5" as="sourcePoint"/>
+                        <mxPoint x="1053" y="-25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="vm1-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="225" y="680" width="255" height="165" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm1-icon" value="" style="shape=mxgraph.cisco.servers.standard_server;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="688" width="40" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm1-label" value="&lt;b&gt;ktranslate-1&lt;/b&gt;&lt;br/&gt;VM.Standard.E4.Flex&lt;br/&gt;2 OCPU · 16 GB RAM&lt;br/&gt;&lt;font style=&#39;font-size:8px&#39;&gt;Docker: kentik/ktranslate:v2&lt;br/&gt;-http.source :8081&lt;br/&gt;-sinks kafka&lt;br/&gt;-format flat_json&lt;br/&gt;-bootstrap.servers &lt;oci-streaming&gt;&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="225" y="735" width="255" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm2-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="517" y="680" width="255" height="165" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm2-icon" value="" style="shape=mxgraph.cisco.servers.standard_server;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="572" y="688" width="40" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm2-label" value="&lt;b&gt;ktranslate-2&lt;/b&gt;&lt;br/&gt;VM.Standard.E4.Flex&lt;br/&gt;2 OCPU · 16 GB RAM&lt;br/&gt;&lt;font style=&#39;font-size:8px&#39;&gt;Docker: kentik/ktranslate:v2&lt;br/&gt;-http.source :8081&lt;br/&gt;-sinks kafka&lt;br/&gt;-format flat_json&lt;br/&gt;-bootstrap.servers &lt;oci-streaming&gt;&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="517" y="735" width="255" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm3-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="680" width="255" height="165" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm3-icon" value="" style="shape=mxgraph.cisco.servers.standard_server;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="865" y="688" width="40" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="vm3-label" value="&lt;b&gt;ktranslate-3&lt;/b&gt;&lt;br/&gt;VM.Standard.E4.Flex&lt;br/&gt;2 OCPU · 16 GB RAM&lt;br/&gt;&lt;font style=&#39;font-size:8px&#39;&gt;Docker: kentik/ktranslate:v2&lt;br/&gt;-http.source :8081&lt;br/&gt;-sinks kafka&lt;br/&gt;-format flat_json&lt;br/&gt;-bootstrap.servers &lt;oci-streaming&gt;&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="735" width="255" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="nat-gw" value="&lt;b&gt;NAT Gateway&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Outbound internet egress&lt;br/&gt;Docker Hub pulls&lt;br/&gt;Kentik API calls&lt;/font&gt;" style="shape=mxgraph.cisco.routers.router;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1;align=center;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="278" y="920" width="50" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="nat-label" value="&lt;b&gt;NAT Gateway&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Outbound internet&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="972" width="110" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="iam-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=1.5;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="275" width="265" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="iam-label" value="&lt;b&gt;OCI IAM&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Dedicated user: ktranslate-streaming-user&lt;br/&gt;Group + policy: manage streams&lt;br/&gt;Auth token format:&lt;br/&gt;  tenancyName/username/streamPoolId&lt;/font&gt;" style="text;html=1;align=left;fontSize=9;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="275" width="265" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="vault-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=1.5;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="430" width="265" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="vault-label" value="&lt;b&gt;OCI Vault&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Stores Kafka auth token as OCI Secret&lt;br/&gt;Retrieved at cloud-init boot time&lt;br/&gt;via instance principal auth&lt;/font&gt;" style="text;html=1;align=left;fontSize=9;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="430" width="265" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="streaming-bg" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=20;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="620" width="245" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="streaming-label" value="&lt;b style=&#39;font-size:11px&#39;&gt;OCI Streaming&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Stream Pool: ktranslate-pool&lt;br/&gt;Stream: ktranslate-firehose&lt;br/&gt;3 partitions (1 per producer)&lt;br/&gt;Kafka-compatible API&lt;br/&gt;streaming.{region}.oci.oraclecloud.com:9092&lt;br/&gt;SASL_SSL / PLAIN mechanism&lt;br/&gt;Message format: flat_json&lt;/font&gt;" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="655" width="245" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="rt-note" value="&lt;b&gt;Route Tables&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Public RT: 0.0.0.0/0 → IGW&lt;br/&gt;Private RT: 0.0.0.0/0 → NAT GW&lt;br/&gt;Private RT: OCI Svc CIDR → Svc GW&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#AAAAAA;fontSize=9;align=left;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="210" y="1080" width="250" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="nsg-note" value="&lt;b&gt;Security (NSGs)&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;lb-nsg:&lt;br/&gt;  In: TCP :443 from 0.0.0.0/0&lt;br/&gt;  Out: TCP :8081 to compute-nsg&lt;br/&gt;compute-nsg:&lt;br/&gt;  In: TCP :8081 from lb-nsg&lt;br/&gt;  Out: TCP :9092 to OCI Svc Network&lt;br/&gt;  Out: TCP :443 to internet (Docker/API)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#AAAAAA;fontSize=9;align=left;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="1080" width="320" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="tf-note" value="&lt;b&gt;Deployed by Terraform&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size:9px&#39;&gt;terraform/networking.tf&lt;br/&gt;terraform/iam.tf&lt;br/&gt;terraform/streaming.tf&lt;br/&gt;terraform/compute.tf  (count=3)&lt;br/&gt;terraform/load_balancer.tf&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FFF0;strokeColor=#82B366;fontSize=9;align=left;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="1080" width="255" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-kentik-inet" value="HTTPS :443" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#6C8EBF;fontColor=#6C8EBF;fontSize=10;fontStyle=1;endArrow=open;endFill=0;" parent="1" source="kentik" target="internet" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-inet-igw" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#888888;dashed=1;endArrow=open;endFill=0;" parent="1" source="internet" target="igw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-igw-lb" value="HTTPS :443" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#6C8EBF;fontColor=#6C8EBF;fontSize=10;fontStyle=1;endArrow=block;endFill=1;" parent="1" source="igw" target="lb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-lb-vm1" value="HTTP :8081" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82B366;fontColor=#82B366;fontSize=9;fontStyle=1;endArrow=block;endFill=1;" parent="1" source="lb" target="vm1-box" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-lb-vm2" value="HTTP :8081" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82B366;fontColor=#82B366;fontSize=9;fontStyle=1;endArrow=block;endFill=1;" parent="1" source="lb" target="vm2-box" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-lb-vm3" value="HTTP :8081" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82B366;fontColor=#82B366;fontSize=9;fontStyle=1;endArrow=block;endFill=1;" parent="1" source="lb" target="vm3-box" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vm1-svcgw" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9673A6;dashed=1;endArrow=open;endFill=0;" parent="1" source="vm1-box" target="svc-gw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vm2-svcgw" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9673A6;dashed=1;endArrow=open;endFill=0;" parent="1" source="vm2-box" target="svc-gw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vm3-svcgw" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9673A6;dashed=1;endArrow=open;endFill=0;" parent="1" source="vm3-box" target="svc-gw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-svcgw-streaming" value="SASL_SSL :9092&lt;br/&gt;flat_json | OCI Svc Network" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9673A6;fontColor=#9673A6;fontSize=9;fontStyle=1;endArrow=block;endFill=1;" parent="1" source="svc-gw" target="streaming-bg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vm1-nat" value="Outbound" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#888888;dashed=1;fontSize=9;endArrow=open;endFill=0;" parent="1" source="vm1-box" target="nat-gw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-nat-inet" value="Docker Hub / Kentik API" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#888888;fontColor=#888888;dashed=1;fontSize=9;endArrow=open;endFill=0;" parent="1" source="nat-gw" target="internet" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-iam-vault" value="issues auth token" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#D79B00;fontColor=#D79B00;dashed=1;fontSize=9;endArrow=open;endFill=0;" parent="1" source="iam-bg" target="vault-bg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vault-streaming" value="Kafka SASL creds" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#D79B00;fontColor=#D79B00;dashed=1;fontSize=9;endArrow=open;endFill=0;" parent="1" source="vault-bg" target="streaming-bg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

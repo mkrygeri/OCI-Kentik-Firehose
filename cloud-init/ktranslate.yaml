@@ -1,0 +1,95 @@
+#cloud-config
+# ─────────────────────────────────────────────────────────────────────────────
+# ktranslate cloud-init
+#
+# This file is rendered by Terraform (templatefile()) and injected as the
+# user_data for each ktranslate compute instance.  Template variables:
+#
+#   ${kafka_bootstrap}         – OCI Streaming bootstrap endpoint (host:port)
+#   ${kafka_sasl_username}     – SASL username (tenancy/user/streamPoolId)
+#   ${kafka_sasl_password}     – Kafka SASL password (OCI auth token)
+#   ${kafka_topic}             – Kafka topic / OCI Stream name
+#   ${ktranslate_image}        – Docker image (kentik/ktranslate:v2)
+#   ${ktranslate_http_port}    – ktranslate HTTP listen port (8081)
+#   ${ktranslate_format}       – Output format (flat_json)
+#   ${ktranslate_compression}  – Compression (gzip)
+#   ${ktranslate_max_flows}    – Max flows per message
+#   ${ktranslate_log_level}    – Log level (info)
+# ─────────────────────────────────────────────────────────────────────────────
+
+runcmd:
+  # ── 0. Wait for DNS / network to be ready ────────────────────────────────────
+  # Cloud-init can start before the DHCP resolver is fully operational.
+  # Disable the Ksplice repo (requires special OCI routes and causes failures)
+  # then wait until DNS resolves before proceeding with package installs.
+  - dnf config-manager --disable ol8_ksplice ol8_ksplice_userspace 2>/dev/null || true
+  - |
+    for i in $(seq 1 24); do
+      if host download.docker.com >/dev/null 2>&1; then
+        echo "DNS ready after ${i} tries"
+        break
+      fi
+      echo "Waiting for DNS... attempt $i"
+      sleep 5
+    done
+
+  # ── 1. Install Docker CE from the official Docker repo ──────────────────────
+  # Oracle Linux 8 does not ship a 'docker' package in its default repos.
+  - dnf install -y dnf-plugins-core
+  - dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - dnf install -y docker-ce docker-ce-cli containerd.io --allowerasing
+  - systemctl enable --now docker
+
+  # ── 2. Pull the ktranslate Docker image ─────────────────────────────────────
+  - docker pull ${ktranslate_image}
+
+  # ── 3. Write the systemd unit for ktranslate ────────────────────────────────
+  - |
+    cat > /etc/systemd/system/ktranslate.service << 'UNIT'
+    [Unit]
+    Description=ktranslate Kentik flow collector
+    After=docker.service network-online.target
+    Requires=docker.service
+
+    [Service]
+    Restart=always
+    RestartSec=10
+    TimeoutStartSec=120
+    ExecStartPre=-/usr/bin/docker stop ktranslate
+    ExecStartPre=-/usr/bin/docker rm ktranslate
+    ExecStart=/usr/bin/docker run --name ktranslate \
+      --restart unless-stopped \
+      --network host \
+      -e KT_KAFKA_VERSION=1.0.0 \
+      ${ktranslate_image} \
+      -listen 0.0.0.0:${ktranslate_http_port} \
+      -http.source \
+      -sinks kafka \
+      -format ${ktranslate_format} \
+      -compression ${ktranslate_compression} \
+      -bootstrap.servers ${kafka_bootstrap} \
+      -kafka_topic ${kafka_topic} \
+      -kafka_security_protocol SASL_SSL \
+      -kafka_sasl_mechanism PLAIN \
+      -kafka_sasl_username ${kafka_sasl_username} \
+      -kafka_sasl_password ${kafka_sasl_password} \
+      -log_level ${ktranslate_log_level} \
+      -max_flows_per_message ${ktranslate_max_flows} \
+      -service_name ktranslate \
+      -metalisten :6060
+    ExecStop=/usr/bin/docker stop ktranslate
+
+    [Install]
+    WantedBy=multi-user.target
+    UNIT
+
+  # ── 4. Open ktranslate port in firewalld ────────────────────────────────────
+  - firewall-cmd --zone=public --add-port=${ktranslate_http_port}/tcp --permanent
+  - firewall-cmd --reload
+
+  # ── 5. Enable and start ktranslate ─────────────────────────────────────────
+  - systemctl daemon-reload
+  - systemctl enable ktranslate
+  - systemctl start ktranslate
+
+final_message: "ktranslate cloud-init complete after $UPTIME seconds"

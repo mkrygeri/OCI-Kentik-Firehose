@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Terraform-generated files — never commit these
+# ─────────────────────────────────────────────────────────────────────────────
+
+# State files (contain sensitive credentials in plaintext)
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+
+# Plan files (contain resolved secrets)
+*.tfplan
+tfplan
+
+# Local variable overrides with real credentials
+terraform.tfvars
+
+# Terraform working directory
+**/.terraform/
+**/.terraform.lock.hcl
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Secrets & credentials
+# ─────────────────────────────────────────────────────────────────────────────
+.env
+*.pem
+*.key
+*_rsa
+*_rsa.pub
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Draw.io temporary files
+# ─────────────────────────────────────────────────────────────────────────────
+*.dtmp
+
+# ─────────────────────────────────────────────────────────────────────────────
+# macOS
+# ─────────────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Editor artifacts
+# ─────────────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
