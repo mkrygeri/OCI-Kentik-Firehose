@@ -20,6 +20,7 @@ Usage:
 
 import argparse
 import base64
+import gzip
 import json
 import subprocess
 import sys
@@ -94,11 +95,18 @@ def get_vault_secret(secret_ocid: str) -> str:
 
 # ── Message display ───────────────────────────────────────────────────────────
 
+def decompress(data: bytes) -> bytes:
+    """Decompress gzip data if the magic bytes are present, otherwise pass through."""
+    if data[:2] == b'\x1f\x8b':
+        return gzip.decompress(data)
+    return data
+
+
 def print_message(msg, raw: bool, index: int):
     print(f"\n─── message {index} "
           f"| partition={msg.partition()} offset={msg.offset()} "
           f"| {len(msg.value())} bytes ───")
-    value = msg.value()
+    value = decompress(msg.value())
     if raw:
         print(value.decode(errors="replace"))
         return
